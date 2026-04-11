@@ -47,3 +47,30 @@ def add_product(Product:Product):
     products.append(Product)
     return Product
 
+
+
+
+@app.put("/products")
+def update_product(id:int, Product:Product):
+    for i in range(len(products)):
+        if products[i].id==id:
+            products[i]=Product
+            return "Product added successfully"
+
+
+        return "No product found"    
+
+
+
+
+
+@app.delete("/products")
+def delete_product(id:int):
+    for i in range (len(products)):
+        if products[i].id==id:
+            del products[i]
+            return "Product Deleted"
+
+    return "Product Not found"       
+
+       
