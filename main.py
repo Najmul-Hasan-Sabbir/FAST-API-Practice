@@ -10,14 +10,32 @@ def greet():
 
 
 
-products=[
-
-Product(id=1, name="mobile", description="Best phone now", price=20000, quantity=5),
-Product(id=2, name="Laptop", description="best laptop", price=66000, quantity=2)
-
-
+products = [
+    Product(id=1, name="iPhone 15", description="Latest Apple flagship phone", price=79999, quantity=15),
+    Product(id=2, name="Samsung Galaxy S24", description="Android powerhouse with AI features", price=74999, quantity=12),
+    Product(id=3, name="MacBook Air M3", description="Thin and light laptop with 18hr battery", price=114999, quantity=8),
+    Product(id=4, name="Dell XPS 15", description="Windows premium laptop for developers", price=159999, quantity=5),
+    Product(id=5, name="Sony WH-1000XM5", description="Noise cancelling headphones", price=26999, quantity=20),
+    Product(id=6, name="Logitech MX Master 3S", description="Ergonomic wireless mouse", price=8999, quantity=25),
+    Product(id=7, name="Keychron K3 Pro", description="Mechanical keyboard low profile", price=11999, quantity=10),
+    Product(id=8, name="iPad Air", description="M2 chip tablet for productivity", price=54999, quantity=7),
+    Product(id=9, name="Samsung 980 Pro SSD", description="1TB NVMe Gen4 storage", price=8999, quantity=30),
+    Product(id=10, name="Raspberry Pi 5", description="Single board computer 8GB RAM", price=4999, quantity=18)
 ]
 
 @app.get("/products")
 def all_products():
     return products
+
+
+
+
+
+#using the if condition  
+# so for wrong input or random id that is not present in our product list , we will not crash our server 
+
+@app.get("/products/{id}")
+def get_product_by_ID(id: int):
+    if id < 1 or id > len(products):
+        return {"error": f"Product with ID {id} not found"}
+    return products[id-1]
