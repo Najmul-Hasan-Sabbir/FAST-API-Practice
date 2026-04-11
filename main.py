@@ -39,3 +39,11 @@ def get_product_by_ID(id: int):
     if id < 1 or id > len(products):
         return {"error": f"Product with ID {id} not found"}
     return products[id-1]
+
+
+
+@app.post("/products")
+def add_product(Product:Product):
+    products.append(Product)
+    return Product
+
