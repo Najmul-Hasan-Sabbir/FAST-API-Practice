@@ -25,6 +25,11 @@ products = [
 
 @app.get("/products")
 def all_products():
+
+
+
+    # DB connection 
+    # Query 
     return products
 
 
