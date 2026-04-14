@@ -1,15 +1,20 @@
-from fastapi import FastAPI   
+from fastapi import FastAPI
 from models import Product
-app = FastAPI()   # Note the parentheses ()
+import database_models
+from database import engine
+
+app = FastAPI()
+
+# Create tables in PostgreSQL
+database_models.Base.metadata.create_all(bind=engine)
+
 
 @app.get("/")
-
 def greet():
-    return "Welcome to FAST API"
+    return {"message": "Welcome to FAST API"}
 
 
-
-
+# In-memory data (for now)
 products = [
     Product(id=1, name="iPhone 15", description="Latest Apple flagship phone", price=79999, quantity=15),
     Product(id=2, name="Samsung Galaxy S24", description="Android powerhouse with AI features", price=74999, quantity=12),
@@ -23,59 +28,45 @@ products = [
     Product(id=10, name="Raspberry Pi 5", description="Single board computer 8GB RAM", price=4999, quantity=18)
 ]
 
+
+# Get all products
 @app.get("/products")
 def all_products():
-
-
-
-    # DB connection 
-    # Query 
     return products
 
 
-
-
-
-#using the if condition  
-# so for wrong input or random id that is not present in our product list , we will not crash our server 
-
+# Get product by ID
 @app.get("/products/{id}")
 def get_product_by_ID(id: int):
     if id < 1 or id > len(products):
         return {"error": f"Product with ID {id} not found"}
-    return products[id-1]
+    return products[id - 1]
 
 
-
+# Add product
 @app.post("/products")
-def add_product(Product:Product):
-    products.append(Product)
-    return Product
+def add_product(product: Product):
+    products.append(product)
+    return product
 
 
-
-
+# Update product
 @app.put("/products")
-def update_product(id:int, Product:Product):
+def update_product(id: int, product: Product):
     for i in range(len(products)):
-        if products[i].id==id:
-            products[i]=Product
-            return "Product added successfully"
+        if products[i].id == id:
+            products[i] = product
+            return {"message": "Product updated successfully"}
+    
+    return {"message": "No product found"}
 
 
-        return "No product found"    
-
-
-
-
-
+# Delete product
 @app.delete("/products")
-def delete_product(id:int):
-    for i in range (len(products)):
-        if products[i].id==id:
+def delete_product(id: int):
+    for i in range(len(products)):
+        if products[i].id == id:
             del products[i]
-            return "Product Deleted"
-
-    return "Product Not found"       
-
-       
+            return {"message": "Product deleted successfully"}
+    
+    return {"message": "Product not found"}
