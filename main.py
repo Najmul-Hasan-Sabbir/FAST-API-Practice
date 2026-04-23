@@ -1,10 +1,20 @@
 from fastapi import Depends, FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from models import Product
 import database_models
 from database import engine, SessionLocal
 from sqlalchemy.orm import Session
 
 app = FastAPI()
+
+# ✅ CORS fix — add this right after app = FastAPI()
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 database_models.Base.metadata.create_all(bind=engine)
 
@@ -29,9 +39,9 @@ products = [
 
 
 def get_db():
-    db = SessionLocal()    # ✅ SessionLocal, not Session
+    db = SessionLocal()
     try:
-        yield db           # ✅ just yield db, no ()
+        yield db
     finally:
         db.close()
 
